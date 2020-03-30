@@ -253,8 +253,8 @@ jobs:
                     cp -r ${HOME}/.local/share build/artifacts
                     cp LICENSE* CHANGELOG.md README.md build/artifacts
                     # This action should not make any harm. It must be removed.
-                    find build/retdec -name "*.ord" | xargs rm -f
-                    cp -r build/radare2/install/{bin,include,lib,share} build/artifacts
+                    find build/r2plugin/install/share/retdec -name "*.ord" | xargs rm -f
+                    cp -r build/r2plugin/install/{bin,include,lib,share} build/artifacts
 
             - name: Clone RetDec for Tests
               run: git clone https://github.com/avast/retdec
@@ -324,4 +324,4 @@ jobs:
               uses: actions/upload-artifact@v1
               with:
                   name: RetDec-R2Plugin-Build-${{ runner.os }}-${{ matrix.type }}
-                  path: build/r2plugin/artifacts
+                  path: build/artifacts
