@@ -249,15 +249,13 @@ jobs:
             #   \_ README.md
             - name: Prepare Files for Publishing
               run: |
-                    cp -r ${HOME}/.local/share build/r2plugin/install/
-                    cp LICENSE* CHANGELOG.md README.md build/r2plugin/install/
+                    mkdir -p build/artifacts
+                    cp -r ${HOME}/.local/share build/artifacts
+                    cp LICENSE* CHANGELOG.md README.md build/artifacts
+                    # This action should not make any harm. It must be removed.
+                    find build/retdec -name "*.ord" | xargs rm -f
+                    cp -r build/radare2/install/{bin,include,lib,share} build/artifacts
 
-            - name: Archive Artifacts
-              uses: actions/upload-artifact@v1
-              with:
-                  name: RetDec-R2Plugin-Build-${{ runner.os }}-${{ matrix.type }}
-                  path: build/r2plugin/install
-            
             - name: Clone RetDec for Tests
               run: git clone https://github.com/avast/retdec
               working-directory: build
@@ -321,3 +319,9 @@ jobs:
                     export PKG_CONFIG_PATH=${PWD}/../radare2/lib/pkgconfig:${PKG_CONFIG_PATH}
                     python3 ./runner.py tools.r2plugin
               working-directory: build/retdec-regression-tests-framework
+
+            - name: Archive Artifacts
+              uses: actions/upload-artifact@v1
+              with:
+                  name: RetDec-R2Plugin-Build-${{ runner.os }}-${{ matrix.type }}
+                  path: build/r2plugin/artifacts
